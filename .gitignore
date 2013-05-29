@@ -1,0 +1,4 @@
+*.pem
+tmp
+cookbooks
+.vagrant
