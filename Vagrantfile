@@ -20,22 +20,29 @@ Vagrant.configure("2") do |config|
     chef.cookbooks_path = ["cookbooks"]
     chef.add_recipe :apt
 
+    # generally useful for building software
+    chef.add_recipe 'build-essential'
+
     # databases
     chef.add_recipe 'mysql::server'
     chef.add_recipe 'postgresql::server'
     chef.add_recipe 'sqlite'
 
     # version control systems
-    chef.add_recipe 'mercurial'
     chef.add_recipe 'git'
-    chef.add_recipe 'subversion'
 
     # dev tools
     chef.add_recipe 'vim'
-    #chef.add_recipe 'rvm::vagrant'
+    chef.add_recipe 'rvm'
+    chef.add_recipe "rvm::vagrant"
+    chef.add_recipe "rvm::system"
     #chef.add_recipe 'rvm::system'
+    #chef.add_recipe 'rvm::gem_package'
 
     chef.json = {
+      git: {
+        prefix: "/usr/local"
+      },
       mysql: {
         server_root_password: "password",
         server_repl_password: "password",
@@ -51,28 +58,6 @@ Vagrant.configure("2") do |config|
         socket: "/var/run/mysqld/mysqld.sock",
         pid_file: "/var/run/mysqld/mysqld.pid",
         grants_path: "/etc/mysql/grants.sql"
-      },
-      subversion: {
-        repo_dir: "/srv/svn",
-        repo_name: "repo",
-        server_name: "svn",
-        user: "subversion",
-        password: "subversion"
-      },
-      #rbenv: {
-      #  user_installs: [
-      #    {
-      #      user: "vagrant",
-      #      rubies: [
-      #        "1.9.3-p392",
-      #        "2.0.0-p0"
-      #      ],
-      #      global: "1.9.3-p392"
-      #    }
-      #  ]
-      #},
-      git: {
-        prefix: "/usr/local"
       },
       postgresql: {
         config: {
@@ -105,8 +90,16 @@ Vagrant.configure("2") do |config|
         password: {
           postgres: "password"
         }
+      },
+      rvm: {
+        rubies:       ['2.0.0'],
+        default_ruby: '2.0.0',
+        global_gems:  [
+          { name: 'bundler' },
+          { name: 'rake' }
+        ]
       }
-    }
+    } # end chef.json
   end
 
   config.vm.provider :aws do |aws, override|
