@@ -1,23 +1,28 @@
 # encoding: utf-8
 
 # the plugin that enables us to run on AWS
-Vagrant.require_plugin "vagrant-aws"
+Vagrant.require_plugin 'vagrant-aws'
 
 # "A Vagrant plugin that ensures the desired version of Chef is installed
 # via the platform-specific Omnibus packages. This proves very useful when
 # using Vagrant with provisioner-less baseboxes OR cloud images."
-Vagrant.require_plugin "vagrant-omnibus"
+#Vagrant.require_plugin 'vagrant-omnibus'
 
-Vagrant.configure("2") do |config|
+Vagrant.configure('2') do |config|
   # bootstrap chef on the vagrant box
-  config.omnibus.chef_version = :latest
+  #config.omnibus.chef_version = :latest
 
-  config.vm.box = "precise64"
-  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+  config.vm.box = 'precise64'
+  config.vm.box_url = 'http://files.vagrantup.com/precise64.box'
+
+  config.vm.network :forwarded_port, guest: 3000, host: 33000
+
+  # use our local SSH keys on the guest box
+  # this is nice for pulling down Github stuff, etc.
   config.ssh.forward_agent = true
 
   config.vm.provision :chef_solo do |chef|
-    chef.cookbooks_path = ["cookbooks"]
+    chef.cookbooks_path = ['cookbooks', 'my_cookbooks']
     chef.add_recipe :apt
 
     # generally useful for building software
@@ -36,63 +41,68 @@ Vagrant.configure("2") do |config|
     chef.add_recipe 'rvm'
     chef.add_recipe "rvm::vagrant"
     chef.add_recipe "rvm::system"
-    #chef.add_recipe 'rvm::system'
-    #chef.add_recipe 'rvm::gem_package'
+
+    # custom recipes
+    chef.add_recipe 'dotfiles'
 
     chef.json = {
+      dotfiles: {
+        group: 'vagrant',
+        repo_url: 'https://github.com/panozzaj/conf.git',
+        dotfiles_directory_name: 'conf',
+        setup_script_name: 'setup',
+        user: 'vagrant'
+      },
       git: {
         prefix: "/usr/local"
       },
       mysql: {
-        server_root_password: "password",
-        server_repl_password: "password",
-        server_debian_password: "password",
-        service_name: "mysql",
         basedir: "/usr",
-        data_dir: "/var/lib/mysql",
-        root_group: "root",
-        mysqladmin_bin: "/usr/bin/mysqladmin",
-        mysql_bin: "/usr/bin/mysql",
         conf_dir: "/etc/mysql",
         confd_dir: "/etc/mysql/conf.d",
-        socket: "/var/run/mysqld/mysqld.sock",
+        data_dir: "/var/lib/mysql",
+        grants_path: "/etc/mysql/grants.sql",
+        mysql_bin: "/usr/bin/mysql",
+        mysqladmin_bin: "/usr/bin/mysqladmin",
         pid_file: "/var/run/mysqld/mysqld.pid",
-        grants_path: "/etc/mysql/grants.sql"
+        root_group: "root",
+        server_debian_password: "password",
+        server_repl_password: "password",
+        server_root_password: "password",
+        service_name: "mysql",
+        socket: "/var/run/mysqld/mysqld.sock"
       },
       postgresql: {
         config: {
           listen_addresses: "*",
           port: "5432"
         },
-        pg_hba: [
-          {
-            type: "local",
-            db: "postgres",
-            user: "postgres",
-            addr: nil,
-            method: "trust"
-          },
-          {
-            type: "host",
-            db: "all",
-            user: "all",
-            addr: "0.0.0.0/0",
-            method: "md5"
-          },
-          {
-            type: "host",
-            db: "all",
-            user: "all",
-            addr: "::1/0",
-            method: "md5"
-          }
-        ],
         password: {
           postgres: "password"
-        }
+        },
+        pg_hba: [{
+            addr: nil,
+            db: "postgres",
+            method: "trust",
+            type: "local",
+            user: "postgres"
+          }, {
+            addr: "0.0.0.0/0",
+            db: "all",
+            method: "md5",
+            type: "host",
+            user: "all"
+          }, {
+            addr: "::1/0",
+            db: "all",
+            method: "md5",
+            type: "host",
+            user: "all"
+          }
+        ]
       },
       rvm: {
-        rubies:       ['2.0.0'],
+        rubies:      ['2.0.0'],
         default_ruby: '2.0.0',
         global_gems:  [
           { name: 'bundler' },
@@ -105,11 +115,11 @@ Vagrant.configure("2") do |config|
   config.vm.provider :aws do |aws, override|
     aws.access_key_id = ENV['AWS_ACCESS_KEY_ID']
     aws.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
-    aws.keypair_name = "vagrant-dev-box-1"
+    aws.keypair_name = 'vagrant-dev-box-1'
 
-    aws.ami = "ami-7747d01e"
+    aws.ami = 'ami-7747d01e'
 
-    override.ssh.username = "ubuntu"
+    override.ssh.username = 'ubuntu'
     override.ssh.private_key_path = './vagrant-dev-box-1.pem'
   end
 end
