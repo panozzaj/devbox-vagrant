@@ -34,6 +34,4 @@ When you want to shut down the box, `vagrant destroy`. You can't currently `vagr
 
 One thing that threw me about vagrant-aws was that the keypair that I needed to create was in the main AWS console, not in my security settings.
 
-I'd like to figure out how to get my Github configuration vars set up and pull from my dotfiles repo so that the environment is good to go. More packages need to be added.
-
 Installing everything I need for every project seems like overkill. It might be nice to have one base box that has the absolute essentials, and then extend it with project-specific stuff. [veewee](https://github.com/jedi4ever/veewee) looks like an interesting project for building boxes. [This looks like a good example](http://seletz.github.io/blog/2012/01/17/creating-vagrant-base-boxes-with-veewee/). One of the downsides appears to be a larger base box size, but it might be worth it and I might be mistaken.

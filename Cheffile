@@ -3,10 +3,11 @@
 site 'http://community.opscode.com/api/v1'
 
 cookbook "apt"
-cookbook "mysql"
-cookbook "vim"
-cookbook "sqlite"
 cookbook "build-essential"
-cookbook "rvm", { github: "fnichol/chef-rvm" }
 cookbook "git"
+cookbook "mysql"
 cookbook "postgresql"
+cookbook "rvm", { github: "fnichol/chef-rvm" }
+cookbook "sqlite"
+cookbook "vim"
+cookbook "zsh"

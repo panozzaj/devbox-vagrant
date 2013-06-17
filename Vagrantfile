@@ -28,6 +28,9 @@ Vagrant.configure('2') do |config|
     # generally useful for building software
     chef.add_recipe 'build-essential'
 
+    # my preferred shell
+    chef.add_recipe 'zsh'
+
     # databases
     chef.add_recipe 'mysql::server'
     chef.add_recipe 'postgresql::server'
@@ -39,11 +42,12 @@ Vagrant.configure('2') do |config|
     # dev tools
     chef.add_recipe 'vim'
     chef.add_recipe 'rvm'
-    chef.add_recipe "rvm::vagrant"
-    chef.add_recipe "rvm::system"
+    chef.add_recipe 'rvm::vagrant'
+    chef.add_recipe 'rvm::system'
 
     # custom recipes
     chef.add_recipe 'dotfiles'
+    chef.add_recipe 'change_shell'
 
     chef.json = {
       dotfiles: {

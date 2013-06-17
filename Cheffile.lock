@@ -28,6 +28,7 @@ SITE
     windows (1.8.10)
       chef_handler (>= 0.0.0)
     yum (2.2.2)
+    zsh (1.0.0)
 
 GIT
   remote: https://github.com/fnichol/chef-rvm
@@ -46,4 +47,5 @@ DEPENDENCIES
   rvm (>= 0)
   sqlite (>= 0)
   vim (>= 0)
+  zsh (>= 0)
 
