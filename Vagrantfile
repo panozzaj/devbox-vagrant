@@ -52,8 +52,10 @@ Vagrant.configure('2') do |config|
     chef.json = {
       dotfiles: {
         group: 'vagrant',
+        host: 'precise64',
         repo_url: 'https://github.com/panozzaj/conf.git',
         dotfiles_directory_name: 'conf',
+        platform: 'ubuntu-12.04',
         setup_script_name: 'setup',
         user: 'vagrant'
       },

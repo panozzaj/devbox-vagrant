@@ -24,5 +24,5 @@ bash "Run dotfile setup script" do
   cwd home_dir
   user user
   group group
-  code "./#{script_name}"
+  code "./#{script_name} '#{dotfiles['platform']}' '#{dotfiles['host']}'"
 end
