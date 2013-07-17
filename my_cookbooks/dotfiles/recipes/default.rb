@@ -9,13 +9,6 @@ user = dotfiles['user']
 group = dotfiles['group']
 dotfiles_directory_name = dotfiles['dotfiles_directory_name']
 
-bash "Copy SSH known hosts file" do
-  cwd home_dir
-  user user
-  group group
-  code "cp /vagrant/github_ssh_known_host /home/#{dotfiles['user']}/.ssh/known_hosts"
-end
-
 # pull down dotfiles
 git "#{home_dir}/#{dotfiles_directory_name}" do
   repository repo_url

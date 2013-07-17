@@ -49,7 +49,7 @@ Vagrant.configure('2') do |config|
     #chef.add_recipe 'build-essential'
 
     # my preferred shell
-    chef.add_recipe 'zsh'
+    #chef.add_recipe 'zsh'
 
     # databases
     #chef.add_recipe 'mysql::server'
@@ -66,7 +66,7 @@ Vagrant.configure('2') do |config|
     #chef.add_recipe 'rvm::system'
 
     # custom recipes
-    #chef.add_recipe 'ssh_known_hosts'
+    chef.add_recipe 'ssh_known_hosts'
     #chef.add_recipe 'demo'
     chef.add_recipe 'dotfiles'
     chef.add_recipe 'change_shell'
