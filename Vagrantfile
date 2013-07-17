@@ -21,31 +21,53 @@ Vagrant.configure('2') do |config|
   # this is nice for pulling down Github stuff, etc.
   config.ssh.forward_agent = true
 
+  config.vm.provider :aws do |aws, override|
+    aws.access_key_id = ENV['AWS_ACCESS_KEY_ID']
+    aws.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
+    aws.keypair_name = 'vagrant-dev-box-1'
+
+    aws.ami = 'ami-7747d01e'
+
+    override.ssh.username = 'ubuntu'
+    override.ssh.private_key_path = './vagrant-dev-box-1.pem'
+  end
+
+  # see https://github.com/mitchellh/vagrant/issues/1303
+  config.vm.provision :shell do |shell|
+    shell.inline = "touch $1 && chmod 0440 $1 && echo $2 > $1"
+    shell.args = %q{/etc/sudoers.d/root_ssh_agent "Defaults    env_keep += \"SSH_AUTH_SOCK\""}
+  end
+
   config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = ['cookbooks', 'my_cookbooks']
-    chef.add_recipe :apt
+    chef.data_bags_path = "data_bags"
+
+    # Adding recipes
+    #chef.add_recipe 'apt'
 
     # generally useful for building software
-    chef.add_recipe 'build-essential'
+    #chef.add_recipe 'build-essential'
 
     # my preferred shell
     chef.add_recipe 'zsh'
 
     # databases
-    chef.add_recipe 'mysql::server'
-    chef.add_recipe 'postgresql::server'
-    chef.add_recipe 'sqlite'
+    #chef.add_recipe 'mysql::server'
+    #chef.add_recipe 'postgresql::server'
+    #chef.add_recipe 'sqlite'
 
     # version control systems
     chef.add_recipe 'git'
 
     # dev tools
-    chef.add_recipe 'vim'
-    chef.add_recipe 'rvm'
-    chef.add_recipe 'rvm::vagrant'
-    chef.add_recipe 'rvm::system'
+    #chef.add_recipe 'vim'
+    #chef.add_recipe 'rvm'
+    #chef.add_recipe 'rvm::vagrant'
+    #chef.add_recipe 'rvm::system'
 
     # custom recipes
+    #chef.add_recipe 'ssh_known_hosts'
+    #chef.add_recipe 'demo'
     chef.add_recipe 'dotfiles'
     chef.add_recipe 'change_shell'
 
@@ -53,7 +75,7 @@ Vagrant.configure('2') do |config|
       dotfiles: {
         group: 'vagrant',
         host: 'precise64',
-        repo_url: 'https://github.com/panozzaj/conf.git',
+        repo_url: 'git@github.com:panozzaj/conf.git',
         dotfiles_directory_name: 'conf',
         platform: 'ubuntu-12.04',
         setup_script_name: 'setup',
@@ -116,16 +138,5 @@ Vagrant.configure('2') do |config|
         ]
       }
     } # end chef.json
-  end
-
-  config.vm.provider :aws do |aws, override|
-    aws.access_key_id = ENV['AWS_ACCESS_KEY_ID']
-    aws.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
-    aws.keypair_name = 'vagrant-dev-box-1'
-
-    aws.ami = 'ami-7747d01e'
-
-    override.ssh.username = 'ubuntu'
-    override.ssh.private_key_path = './vagrant-dev-box-1.pem'
   end
 end

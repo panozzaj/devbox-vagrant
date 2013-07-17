@@ -16,6 +16,7 @@ SITE
       build-essential (>= 0.0.0)
       openssl (>= 0.0.0)
     openssl (1.0.2)
+    partial_search (1.0.0)
     postgresql (3.0.0)
       apt (>= 0.0.0)
       build-essential (>= 0.0.0)
@@ -38,6 +39,14 @@ GIT
     rvm (0.9.1)
       chef_gem (>= 0.0.0)
 
+GIT
+  remote: https://github.com/opscode-cookbooks/ssh_known_hosts
+  ref: master
+  sha: 7be00659342ce09c9c1b472b4340b211e77131a1
+  specs:
+    ssh_known_hosts (1.0.1)
+      partial_search (>= 0.0.0)
+
 DEPENDENCIES
   apt (>= 0)
   build-essential (>= 0)
@@ -46,6 +55,7 @@ DEPENDENCIES
   postgresql (>= 0)
   rvm (>= 0)
   sqlite (>= 0)
+  ssh_known_hosts (>= 0)
   vim (>= 0)
   zsh (>= 0)
 
