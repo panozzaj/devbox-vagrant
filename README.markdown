@@ -12,7 +12,7 @@ Currently we're using:
     - [vagrant-aws](https://github.com/mitchellh/vagrant-aws)
     - [vagrant-omnibus](https://github.com/schisamo/vagrant-omnibus)
  - [chef-solo](http://docs.opscode.com/chef_solo.html) for provisioning (installing things on the box)
- - [librarian-chef](https://github.com/applicationsonline/librarian-chef) (think Bundler for Chef - manages package dependencies and versions)
+ - [Berkshelf](https://github.com/RiotGames/berkshelf) (think Bundler for Chef - manages package dependencies and versions)
 
 The nice thing with this setup is that we can create boxes locally and run them with Virtualbox and SSH in to see how things are working. When the setup seems to be working, we can spin up an EC2 instance of a similarly configured box with basically no effort.
 
@@ -20,7 +20,7 @@ The nice thing with this setup is that we can create boxes locally and run them 
 
 You'll probably need to have bundler and some kind of ruby with rvm installed. Run `bundle`.
 
-Next, run `librarian-chef install` to get the chef packages downloaded locally. To install cookbooks from the internet, manage them in the `Cheffile`, and install with `librarian-chef install`. Looks very close to Bundler.
+Next, run `berks install --path cookbooks` to get the chef packages downloaded locally. To install cookbooks from the internet, manage them in the `Berksfile`. Looks very close to Bundler.
 
 Now, you can run `vagrant up` to create a new box from the Vagrantfile in a VM that Virtualbox runs.
 

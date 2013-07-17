@@ -1,0 +1,65 @@
+{
+  "sources": {
+    "apt": {
+      "locked_version": "1.10.0"
+    },
+    "build-essential": {
+      "locked_version": "1.4.0"
+    },
+    "git": {
+      "locked_version": "2.5.2"
+    },
+    "mysql": {
+      "locked_version": "3.0.2"
+    },
+    "postgresql": {
+      "locked_version": "3.0.2"
+    },
+    "rvm": {
+      "locked_version": "0.9.1",
+      "git": "git://github.com/fnichol/chef-rvm.git",
+      "ref": "7038fb8c518d0d7785767de215b1ae463f237973"
+    },
+    "sqlite": {
+      "locked_version": "1.0.0"
+    },
+    "ssh_known_hosts": {
+      "locked_version": "1.0.1",
+      "git": "git://github.com/opscode-cookbooks/ssh_known_hosts.git",
+      "ref": "7be00659342ce09c9c1b472b4340b211e77131a1"
+    },
+    "vim": {
+      "locked_version": "1.0.2"
+    },
+    "zsh": {
+      "locked_version": "1.0.0"
+    },
+    "dmg": {
+      "locked_version": "1.1.0"
+    },
+    "yum": {
+      "locked_version": "2.3.0"
+    },
+    "windows": {
+      "locked_version": "1.10.0"
+    },
+    "chef_handler": {
+      "locked_version": "1.1.4"
+    },
+    "runit": {
+      "locked_version": "1.1.6"
+    },
+    "openssl": {
+      "locked_version": "1.0.2"
+    },
+    "java": {
+      "locked_version": "1.12.0"
+    },
+    "chef_gem": {
+      "locked_version": "0.1.0"
+    },
+    "partial_search": {
+      "locked_version": "1.0.2"
+    }
+  }
+}

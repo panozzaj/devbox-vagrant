@@ -6,20 +6,29 @@ Vagrant.require_plugin 'vagrant-aws'
 # "A Vagrant plugin that ensures the desired version of Chef is installed
 # via the platform-specific Omnibus packages. This proves very useful when
 # using Vagrant with provisioner-less baseboxes OR cloud images."
-#Vagrant.require_plugin 'vagrant-omnibus'
+Vagrant.require_plugin 'vagrant-omnibus'
 
 Vagrant.configure('2') do |config|
   # bootstrap chef on the vagrant box
-  #config.omnibus.chef_version = :latest
+  config.omnibus.chef_version = :latest
 
   config.vm.box = 'precise64'
   config.vm.box_url = 'http://files.vagrantup.com/precise64.box'
 
   config.vm.network :forwarded_port, guest: 3000, host: 33000
 
-  # use our local SSH keys on the guest box
-  # this is nice for pulling down Github stuff, etc.
+  # Use our local SSH keys on the guest box.
+  # This is nice for pulling down Github stuff, etc.
   config.ssh.forward_agent = true
+
+  # Don't use the vagrant-berkshelf plugin yet.
+  # See https://github.com/riotgames/vagrant-berkshelf
+  # and https://github.com/RiotGames/vagrant-berkshelf/pull/9
+  #
+  # I'd like to get this enabled though so I don't need to manually
+  # pull down cookbooks ever. The issue at this point is that I have
+  # some local custom cookbooks.
+  config.berkshelf.enabled = false
 
   config.vm.provider :aws do |aws, override|
     aws.access_key_id = ENV['AWS_ACCESS_KEY_ID']
@@ -32,7 +41,9 @@ Vagrant.configure('2') do |config|
     override.ssh.private_key_path = './vagrant-dev-box-1.pem'
   end
 
-  # see https://github.com/mitchellh/vagrant/issues/1303
+  # Need this to use the keys we have on the host machine
+  # during provisioning.
+  # See https://github.com/mitchellh/vagrant/issues/1303
   config.vm.provision :shell do |shell|
     shell.inline = "touch $1 && chmod 0440 $1 && echo $2 > $1"
     shell.args = %q{/etc/sudoers.d/root_ssh_agent "Defaults    env_keep += \"SSH_AUTH_SOCK\""}
@@ -43,13 +54,13 @@ Vagrant.configure('2') do |config|
     chef.data_bags_path = "data_bags"
 
     # Adding recipes
-    #chef.add_recipe 'apt'
+    chef.add_recipe 'apt'
 
     # generally useful for building software
-    #chef.add_recipe 'build-essential'
+    chef.add_recipe 'build-essential'
 
     # my preferred shell
-    #chef.add_recipe 'zsh'
+    chef.add_recipe 'zsh'
 
     # databases
     #chef.add_recipe 'mysql::server'
@@ -60,14 +71,15 @@ Vagrant.configure('2') do |config|
     chef.add_recipe 'git'
 
     # dev tools
-    #chef.add_recipe 'vim'
+    chef.add_recipe 'vim'
     #chef.add_recipe 'rvm'
     #chef.add_recipe 'rvm::vagrant'
     #chef.add_recipe 'rvm::system'
 
-    # custom recipes
+    # Need this so we can check out Github repos
     chef.add_recipe 'ssh_known_hosts'
-    #chef.add_recipe 'demo'
+
+    # custom recipes
     chef.add_recipe 'dotfiles'
     chef.add_recipe 'change_shell'
 
